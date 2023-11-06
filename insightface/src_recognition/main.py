@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-import argparse
 import cv2
 import onnxruntime
 # from scrfd import SCRFD
@@ -22,18 +19,7 @@ onnxruntime.set_default_logger_severity(3)
 # rec.prepare(0)
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("img1", type=str, help="Image 1 Path")
-    parser.add_argument("img2", type=str, help="Image 2 Path")
-    parser.add_argument("det", type=str, help="Detect Model Path")
-    parser.add_argument("rec", type=str, help="Recognition Model Path")
-
-    return parser.parse_args()
-
-
 # Compare two image are the same person or not!
-# def func(args):
 def func(img1, img2, detector, rec):
     # detector = SCRFD(det_path)
     # detector.prepare(0)
@@ -54,12 +40,6 @@ def func(img1, img2, detector, rec):
     else:
         image2 = img2
 
-    # detector = SCRFD(args.det)
-    # detector.prepare(0)
-
-    # model_path = args.rec
-    # rec = ArcFaceONNX(model_path)
-    # rec.prepare(0)
 
     bboxes1, kpss1 = detector.autodetect(image1, max_num=1)
     if bboxes1.shape[0] == 0:
@@ -77,7 +57,6 @@ def func(img1, img2, detector, rec):
     if sim < 0.2:
         conclu = "They are NOT the same person"
 
-    # Maybe convert 0.28 to 0.35
     elif sim >= 0.2 and sim < 0.28:
         conclu = "They are LIKELY TO be the same person"
     else:

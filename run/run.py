@@ -37,9 +37,3 @@ if __name__ == "__main__":
         det,
         rec,
     )
-
-    print("SIM: ", sim)
-    print("Conclu: ", conclu)
-    print("BOX: ", box)
-    print("KPS: ", kps)
-    print("Num dimension of Feature vector: ", len(feat))

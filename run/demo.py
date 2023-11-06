@@ -1,10 +1,7 @@
 import cv2
 import numpy as np
-import os
 import sys
 import pickle
-import time
-import math
 
 sys.path.append(
     "/home/buiquan/Desktop/insightface/insightface/src_recognition/"
@@ -130,22 +127,11 @@ if __name__ == "__main__":
     ) as handle:
         vector_data = pickle.load(handle)
 
-    # ADD new vector
-    box, kps, feat = main.get_feature(
-        "/home/buiquan/Desktop/insightface/run/test.jpg",
-        det,
-        rec,
-    )
-    vector_data.append(feat)
-
     # GET label data from pickle file
     with open(
         "/home/buiquan/Desktop/insightface/run/label_data/label.pkl", "rb"
     ) as handle:
         label = pickle.load(handle)
-
-    # ADD new label
-    label.append("Quan")
 
     while True:
         ret, img = cam.read()

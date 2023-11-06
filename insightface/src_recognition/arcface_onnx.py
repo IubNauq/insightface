@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Organization  : insightface.ai
-# @Author        : Jia Guo
-# @Time          : 2021-05-04
-# @Function      :
-
 import numpy as np
 import cv2
 import onnx
