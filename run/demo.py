@@ -21,6 +21,10 @@ from scipy.spatial import distance as dist
 DET_MODEL_PATH = "./detection_model/det_2.5g.onnx"
 REC_MODEL_PATH = "./recognition_model/glintasia_r50.onnx"
 
+MAX_NUM_FACE_DETECT = 1
+DET_SIZE = (320, 320)
+DET_THRESH = 0.6
+
 SIM_THRESHOLD = 0.28
 EYE_THRESHOLD = 0.15
 
@@ -48,7 +52,7 @@ rec.prepare(0)
 
 # LOAD app for landmark
 app = FaceAnalysis(allowed_modules=["detection", "landmark_2d_106"])
-app.prepare(ctx_id=0, det_size=(320, 320), det_thresh=0.6)
+app.prepare(ctx_id=0, det_size=DET_SIZE, det_thresh=DET_THRESH)
 
 
 def image_infer(img):
@@ -56,7 +60,7 @@ def image_infer(img):
         img = cv2.imread(img)
 
     # start = time.time()
-    faces = app.get(img, max_num=1)
+    faces = app.get(img, max_num=MAX_NUM_FACE_DETECT)
     # assert len(faces)==6
     # tim = img.copy()
     box = []
