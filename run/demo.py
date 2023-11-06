@@ -1,11 +1,13 @@
 import cv2
 import numpy as np
+import os
 import sys
 import pickle
+import time
+import math
 
-sys.path.append(
-    "/home/buiquan/Desktop/insightface/insightface/src_recognition/"
-)
+sys.path.append("../insightface/src_recognition")
+
 import main
 from arcface_onnx import ArcFaceONNX
 from scrfd import SCRFD
@@ -15,11 +17,9 @@ from insightface.app import FaceAnalysis
 from scipy.spatial import distance as dist
 
 
-# model PATH
-DET_MODEL_PATH = (
-    "/home/buiquan/Desktop/insightface/run/detection_model/det_2.5g.onnx"
-)
-REC_MODEL_PATH = "/home/buiquan/Desktop/insightface/run/recognition_model/glintasia_r50.onnx"
+# MODEL PATH
+DET_MODEL_PATH = "./detection_model/det_2.5g.onnx"
+REC_MODEL_PATH = "./recognition_model/glintasia_r50.onnx"
 
 SIM_THRESHOLD = 0.28
 EYE_THRESHOLD = 0.15
@@ -48,7 +48,7 @@ rec.prepare(0)
 
 # LOAD app for landmark
 app = FaceAnalysis(allowed_modules=["detection", "landmark_2d_106"])
-app.prepare(ctx_id=0, det_size=(320, 320))
+app.prepare(ctx_id=0, det_size=(320, 320), det_thresh=0.6)
 
 
 def image_infer(img):
@@ -117,20 +117,19 @@ def face_analysis(lmk):
         result += f" FACE DOWN {face_UD_rate}"
     return result
 
+
 if __name__ == "__main__":
     cam = cv2.VideoCapture(0)
 
     # GET vector data from pickle file
     with open(
-        "/home/buiquan/Desktop/insightface/run/vector_data/glintasia_d2.5g.pkl",
+        "./vector_data/glintasia_d2.5g.pkl",
         "rb",
     ) as handle:
         vector_data = pickle.load(handle)
 
     # GET label data from pickle file
-    with open(
-        "/home/buiquan/Desktop/insightface/run/label_data/label.pkl", "rb"
-    ) as handle:
+    with open("./label_data/label.pkl", "rb") as handle:
         label = pickle.load(handle)
 
     while True:
