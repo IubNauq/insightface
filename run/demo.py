@@ -27,6 +27,7 @@ DET_THRESH = 0.6
 
 SIM_THRESHOLD = 0.28
 EYE_THRESHOLD = 0.15
+MOUTH_THRESHOLD = 0.15
 
 FACE_RL_THRESHOLD = 2
 FACE_UP_THRESHOLD = 0.25
@@ -70,7 +71,6 @@ def image_infer(img):
         lmk = face.landmark_2d_106
         box = face.bbox
         kps = face.kps
-        print("det_score: ", face.det_score)
     # print("Landmark time: ", time.time() - start)
     return box, kps, lmk
 
@@ -97,6 +97,19 @@ def face_analysis(lmk):
         result += f"EYE CLOSE {eye_rate}"
     else:
         result += f"EYE OPEN {eye_rate}"
+
+    # MOUTH Analysis
+    mouth66, mouth54 = lmk[66], lmk[54]
+    mouth70, mouth57 = lmk[70], lmk[57]
+    mouth65, mouth69 = lmk[65], lmk[69]
+    A = dist.euclidean(mouth66, mouth54)
+    B = dist.euclidean(mouth70, mouth57)
+    C = dist.euclidean(mouth65, mouth69)
+    mouth_rate = (A + B) / (2.0 * C)
+    if mouth_rate >= MOUTH_THRESHOLD:
+        result += f" MOUTH OPEN {mouth_rate}"
+    else:
+        result += f" MOUTH CLOSE {mouth_rate}"
 
     # FACE Analysis
     face12, face28 = lmk[12], lmk[28]
