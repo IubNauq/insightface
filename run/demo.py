@@ -12,8 +12,8 @@ import main
 from arcface_onnx import ArcFaceONNX
 from scrfd import SCRFD
 
-# sys.path.append("/home/buiquan/Desktop/insightface/insightface/python-package/insightface")
-from insightface.app import FaceAnalysis
+sys.path.append("../insightface/insightface")
+from app.face_analysis import FaceAnalysis
 from scipy.spatial import distance as dist
 
 
