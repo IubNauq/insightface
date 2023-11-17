@@ -7,6 +7,10 @@ import main
 from scrfd import SCRFD
 from arcface_onnx import ArcFaceONNX
 
+sys.path.append("../insightface/insightface")
+from app.face_analysis import FaceAnalysis
+
+
 # MODEL PATH
 DET_MODEL_PATH = "./detection_model/det_2.5g.onnx"
 REC_MODEL_PATH = "./recognition_model/glintasia_r50.onnx"
@@ -18,6 +22,9 @@ det.prepare(0)
 # INITIALIZE recognition model
 rec = ArcFaceONNX(REC_MODEL_PATH)
 rec.prepare(0)
+
+app = FaceAnalysis(allowed_modules=["detection", "genderage"])
+app.prepare(ctx_id=0, det_size=(320, 320))
 
 
 def is_blurry(image, box, threshold=100):
@@ -35,7 +42,19 @@ def is_blurry(image, box, threshold=100):
     return laplacian_var < threshold
 
 
+def estimate_genderage(img_path):
+    img = cv2.imread(img_path)
+    res = app.get(img)
+    gender, age = res[0].sex, res[0].age
+    return gender, age
+
+
 if __name__ == "__main__":
+    # Estimate gender, age
+    img_path = "..."
+    gender, age = estimate_genderage(img_path)
+    
+    
     # IMAGE PATH
     img1_path = "..."
     img2_path = "..."
